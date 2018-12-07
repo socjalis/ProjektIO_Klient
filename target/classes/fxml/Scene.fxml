@@ -1,19 +1,29 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.scene.text.*?>
 <?import java.lang.*?>
 <?import java.util.*?>
 <?import javafx.scene.*?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
-<TabPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="800.0" tabClosingPolicy="UNAVAILABLE" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/8" fx:controller="pl.put.poznan.buildingclient.app.FXMLController">
+<TabPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="800.0" tabClosingPolicy="UNAVAILABLE" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="pl.put.poznan.buildingclient.app.FXMLController">
   <tabs>
-    <Tab text="Podgląd pomieszczeń">
+    <Tab text="Podgląd lokacji">
       <content>
         <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="600.0" prefWidth="800.0">
                <children>
                   <TreeView fx:id="treeview" layoutX="51.0" layoutY="69.0" prefHeight="452.0" prefWidth="326.0" />
                   <Button fx:id="button" layoutX="51.0" layoutY="24.0" mnemonicParsing="false" text="Odśwież" />
+                  <VBox fx:id="vbox" layoutX="423.0" layoutY="69.0" prefHeight="451.0" prefWidth="272.0">
+                     <children>
+                        <Label fx:id="label_name" text="Wybierz lokację">
+                           <font>
+                              <Font name="System Bold" size="26.0" />
+                           </font>
+                        </Label>
+                     </children>
+                  </VBox>
                </children></AnchorPane>
       </content>
     </Tab>

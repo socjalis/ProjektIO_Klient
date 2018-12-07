@@ -21,7 +21,9 @@ import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.event.EventHandler;
 import javafx.scene.control.Button;
+import javafx.scene.control.Label;
 import javafx.scene.control.TreeItem;
+import javafx.scene.layout.VBox;
 import pl.put.poznan.buildingclient.classes.Building;
 import pl.put.poznan.buildingclient.classes.Floor;
 import pl.put.poznan.buildingclient.classes.Room;
@@ -29,10 +31,12 @@ import pl.put.poznan.buildingclient.classes.Room;
 public class FXMLController implements Initializable {
     @FXML
     TreeView treeview;
-    
     @FXML
     Button button;
-    
+    @FXML
+    VBox vbox;
+    @FXML
+    Label label_name;
    
     @Override
     public void initialize(URL url, ResourceBundle rb) {
@@ -86,12 +90,94 @@ public class FXMLController implements Initializable {
         @Override
         public void changed(ObservableValue observable, Object oldValue,
                 Object newValue) {
-
+            vbox.getChildren().clear();
+            vbox.getChildren().add(label_name);
             TreeItem<Location> selectedItem = (TreeItem<Location>) newValue;
             System.out.println("Selected Item : " + selectedItem.getValue());
-            // do what ever you want 
+            Location lokacja = selectedItem.getValue();
+            label_name.setText(selectedItem.getValue().toString());
+            
+            Label area = new Label();
+            area.setText("Powierzchnia: " + getArea(lokacja.getId()) + " m2");
+            vbox.getChildren().add(area);
+            
+            Label cubature = new Label();
+            cubature.setText("Kubatura: " + getCubature(lokacja.getId()) + " m3");
+            vbox.getChildren().add(cubature);
+            
+            Label exposition = new Label();
+            exposition.setText("Oświetlenie: " + getExposition(lokacja.getId()) + " W/m2");
+            vbox.getChildren().add(exposition);
+            
+            if(lokacja instanceof Building){ }
+            
         }
 
       });
     }
+    
+    String getArea(int id){
+        try {
+            String uri = "http://localhost:8080/calculate-area/" + id;
+            String charset = "UTF-8";
+
+            URLConnection connection = new URL(uri).openConnection();
+            connection.setRequestProperty("Accept-Charset", charset);
+            InputStream response = new URL(uri).openStream();
+
+            try (Scanner scanner = new Scanner(response)) {
+                String responseBody = scanner.useDelimiter("\\A").next();
+                return responseBody;
+            }
+        }       catch (MalformedURLException ex) {
+            Logger.getLogger(FXMLController.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (IOException ex) {
+            Logger.getLogger(FXMLController.class.getName()).log(Level.SEVERE, null, ex);
+        }    
+        return null;
+    }
+    
+    String getCubature(int id){
+        try {
+            String uri = "http://localhost:8080/calculate-cubature/" + id;
+            String charset = "UTF-8";
+
+            URLConnection connection = new URL(uri).openConnection();
+            connection.setRequestProperty("Accept-Charset", charset);
+            InputStream response = new URL(uri).openStream();
+
+            try (Scanner scanner = new Scanner(response)) {
+                String responseBody = scanner.useDelimiter("\\A").next();
+                return responseBody;
+            }
+        }       catch (MalformedURLException ex) {
+            Logger.getLogger(FXMLController.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (IOException ex) {
+            Logger.getLogger(FXMLController.class.getName()).log(Level.SEVERE, null, ex);
+        }    
+        return null;
+    }
+    
+        String getExposition(int id){
+        try {
+            String uri = "http://localhost:8080/calculate-exposition/" + id;
+            String charset = "UTF-8";
+
+            URLConnection connection = new URL(uri).openConnection();
+            connection.setRequestProperty("Accept-Charset", charset);
+            InputStream response = new URL(uri).openStream();
+
+            try (Scanner scanner = new Scanner(response)) {
+                String responseBody = scanner.useDelimiter("\\A").next();
+                Double rb = Double.parseDouble(responseBody);
+                return String.format("%.2f", rb);
+            }
+        }       catch (MalformedURLException ex) {
+            Logger.getLogger(FXMLController.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (IOException ex) {
+            Logger.getLogger(FXMLController.class.getName()).log(Level.SEVERE, null, ex);
+        }    
+        return null;
+    }
+
 }
