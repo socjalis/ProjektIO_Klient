@@ -1,9 +1,11 @@
+pl\put\poznan\buildingclient\classes\Room.class
+pl\put\poznan\buildingclient\app\FXMLController$1$1.class
+pl\put\poznan\buildingclient\app\FXMLController$3.class
+pl\put\poznan\buildingclient\classes\Location.class
 pl\put\poznan\buildingclient\app\FXMLController.class
 pl\put\poznan\buildingclient\classes\Floor.class
 pl\put\poznan\buildingclient\app\FXMLController$2.class
-pl\put\poznan\buildingclient\classes\Room.class
 pl\put\poznan\buildingclient\classes\Building.class
 pl\put\poznan\buildingclient\app\FXMLController$1.class
-pl\put\poznan\buildingclient\app\FXMLController$1$1.class
-pl\put\poznan\buildingclient\classes\Location.class
+pl\put\poznan\buildingclient\app\FXMLController$4.class
 pl\put\poznan\buildingclient\app\MainApp.class

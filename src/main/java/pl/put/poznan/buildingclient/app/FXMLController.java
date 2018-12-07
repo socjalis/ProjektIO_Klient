@@ -16,6 +16,13 @@ import javafx.scene.control.TreeView;
 import pl.put.poznan.buildingclient.classes.Location;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.InputStreamReader;
+import java.io.OutputStream;
+import java.net.HttpURLConnection;
 import java.util.ArrayList;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
@@ -24,6 +31,7 @@ import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TreeItem;
 import javafx.scene.layout.VBox;
+import javafx.stage.FileChooser;
 import pl.put.poznan.buildingclient.classes.Building;
 import pl.put.poznan.buildingclient.classes.Floor;
 import pl.put.poznan.buildingclient.classes.Room;
@@ -37,7 +45,17 @@ public class FXMLController implements Initializable {
     VBox vbox;
     @FXML
     Label label_name;
-   
+    
+    @FXML
+    Button button_choose;
+    @FXML
+    Button button_add;
+    File selectedFile;
+    @FXML
+    Label path;
+    
+    
+    
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         button.setOnAction(new EventHandler<ActionEvent>() {
@@ -84,6 +102,88 @@ public class FXMLController implements Initializable {
                     Logger.getLogger(FXMLController.class.getName()).log(Level.SEVERE, null, ex);
                 }    
             }
+        });
+        
+        button_choose.setOnAction(new EventHandler<ActionEvent>() {
+            @Override public void handle(ActionEvent e) {
+                FileChooser fileChooser = new FileChooser();
+                File file = fileChooser.showOpenDialog(null);
+                if (file != null) {
+                    selectedFile = file;
+                    path.setText(selectedFile.toString());
+                }
+            }
+        });
+        
+        button_add.setOnAction(new EventHandler<ActionEvent>() {
+            @Override public void handle(ActionEvent e) {
+                String query = "http://localhost:8080/buildings";
+
+                FileInputStream fis = null;
+                String json = "";
+                try {
+                    fis = new FileInputStream(selectedFile);
+                } catch (FileNotFoundException ex) {
+                    Logger.getLogger(FXMLController.class.getName()).log(Level.SEVERE, null, ex);
+                }
+                int content;
+                try {
+                    while ((content = fis.read()) != -1) {
+                        // convert to char and display it
+                        json += (char) content;
+                    }
+                } catch (IOException ex) {
+                    Logger.getLogger(FXMLController.class.getName()).log(Level.SEVERE, null, ex);
+                }
+                
+                            
+                /////
+try {
+
+		URL url = new URL("http://localhost:8080/buildings");
+		HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+		conn.setDoOutput(true);
+		conn.setRequestMethod("POST");
+		conn.setRequestProperty("Content-Type", "application/json");
+
+		String input = json;
+
+		OutputStream os = conn.getOutputStream();
+		os.write(input.getBytes());
+		os.flush();
+
+		if (conn.getResponseCode() != HttpURLConnection.HTTP_CREATED && conn.getResponseCode() != 200) {
+			throw new RuntimeException("Failed : HTTP error code : "
+				+ conn.getResponseCode());
+		}
+
+		BufferedReader br = new BufferedReader(new InputStreamReader(
+				(conn.getInputStream())));
+
+		String output;
+		System.out.println("Output from Server .... \n");
+		while ((output = br.readLine()) != null) {
+			System.out.println(output);
+		}
+
+		conn.disconnect();
+
+	  } catch (MalformedURLException ei) {
+
+		ei.printStackTrace();
+
+	  } catch (IOException ei) {
+
+		ei.printStackTrace();
+
+	 }
+
+                /////
+
+
+                
+            }
+            
         });
         
         treeview.getSelectionModel().selectedItemProperty().addListener( new ChangeListener() {
@@ -136,7 +236,6 @@ public class FXMLController implements Initializable {
         }    
         return null;
     }
-    
     String getCubature(int id){
         try {
             String uri = "http://localhost:8080/calculate-cubature/" + id;
@@ -157,8 +256,7 @@ public class FXMLController implements Initializable {
         }    
         return null;
     }
-    
-        String getExposition(int id){
+    String getExposition(int id){
         try {
             String uri = "http://localhost:8080/calculate-exposition/" + id;
             String charset = "UTF-8";
@@ -179,5 +277,5 @@ public class FXMLController implements Initializable {
         }    
         return null;
     }
-
+    
 }
