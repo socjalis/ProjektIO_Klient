@@ -36,7 +36,7 @@
                         <HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0" spacing="10.0">
                            <children>
                               <Button fx:id="button_choose" mnemonicParsing="false" text="Wybierz plik" />
-                              <Label fx:id="path" text="Ścieżka pliku" />
+                              <Label fx:id="path" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="26.0" prefWidth="116.0" text="Ścieżka pliku" />
                            </children>
                         </HBox>
                         <Button fx:id="button_add" mnemonicParsing="false" text="Dodaj budynek" />
